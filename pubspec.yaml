@@ -38,6 +38,8 @@ dependencies:
 
   http: ^1.6.0
 
+  flutter_dotenv: ^5.1.0
+
 
   #Navbar
   persistent_bottom_nav_bar: ^6.2.1
@@ -68,6 +70,7 @@ flutter:
   assets:
     - assets/
     - assets/Home_Screen_photo/
+    - API.env
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hiking/Pages/gear.dart';
 import 'package:hiking/Pages/home.dart';
