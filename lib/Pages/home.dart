@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hiking/screens/emergency_screen.dart';
 import '../models/weather_model.dart';
 import '../services/weather_service.dart';
 import '../screens/weather_screen.dart';
@@ -158,6 +159,14 @@ class _HomeState extends State<Home> {
             ),
 
             const SizedBox(height: 30),
+
+            GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => EmergencyScreen()),
+              ),
+              child: Text("Emergency contact")
+            ),
           ],
         ),
       ),
