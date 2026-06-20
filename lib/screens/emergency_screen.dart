@@ -477,7 +477,7 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
               children: [
                 _actionIcon(Icons.call, Colors.green[700]!, () => _makeCall(number), screenWidth),
                 SizedBox(width: screenWidth * 0.02),
-                _actionIcon(Icons.sms, Colors.blue[700]!, () => _sendSMS(number), screenWidth),
+                _actionIcon(Icons.chat, Colors.blue[700]!, () => _sendSMS(number), screenWidth),
               ],
             ),
           ],

@@ -1,10 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hiking/Pages/navbar.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'models/trail_model.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "API.env");
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await Hive.initFlutter();
+  Hive.registerAdapter(TrailModelAdapter());
+  await Hive.openBox('trails');
   runApp(const MyApp());
 }
 
