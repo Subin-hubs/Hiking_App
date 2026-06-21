@@ -68,9 +68,7 @@ class _NavbarState extends State<Navbar> {
 
   void _onTabTapped(int index) {
     if (index == _currentIndex) return;
-
     setState(() => _currentIndex = index);
-
     _pageController.jumpToPage(index);
   }
 
@@ -85,7 +83,7 @@ class _NavbarState extends State<Navbar> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        selectedItemColor: Colors.blueAccent.shade700,
+        selectedItemColor: Colors.green[700],
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
         showUnselectedLabels: true,

@@ -6,8 +6,7 @@ class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-            'you can reconfigure this by running the FlutterFire CLI again.',
+        'DefaultFirebaseOptions have not been configured for web.',
       );
     }
     switch (defaultTargetPlatform) {
@@ -15,8 +14,7 @@ class DefaultFirebaseOptions {
         return android;
       case TargetPlatform.iOS:
         throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-              'you can reconfigure this by running the FlutterFire CLI again.',
+          'DefaultFirebaseOptions have not been configured for iOS.',
         );
       default:
         throw UnsupportedError(
@@ -31,5 +29,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '799807802561',
     projectId: 'hiking-56092',
     storageBucket: 'hiking-56092.firebasestorage.app',
+    androidClientId: '799807802561-5cl7khngb8drso04e28if0sfmeiqei8a.apps.googleusercontent.com',
   );
 }

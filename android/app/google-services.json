@@ -1,26 +1,44 @@
-{
-  "project_info": {
-    "project_number": "799807802561",
-    "project_id": "hiking-56092",
-    "storage_bucket": "hiking-56092.firebasestorage.app"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:799807802561:android:67ff9316e4866a9bd61840",
-        "android_client_info": {
-          "package_name": "com.example.hiking"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
+  {
+    "project_info": {
+      "project_number": "799807802561",
+      "project_id": "hiking-56092",
+      "storage_bucket": "hiking-56092.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:799807802561:android:67ff9316e4866a9bd61840",
+          "android_client_info": {
+            "package_name": "com.example.hiking"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "799807802561-5cl7khngb8drso04e28if0sfmeiqei8a.apps.googleusercontent.com",
+            "client_type": 1,
+            "android_info": {
+              "package_name": "com.example.hiking",
+              "certificate_hash": "ed7fd208ceb5ad88f2bde8c4a5082659cb7b41b8"
+            }
+          },
+          {
+            "client_id": "799807802561-bk8e63k4oc51r6osd4qn5s7tgr67t1r4.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
         {
           "current_key": "AIzaSyARlmcowtMTggVTt09ZaRTps7Boo7thFnc"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799807802561-bk8e63k4oc51r6osd4qn5s7tgr67t1r4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

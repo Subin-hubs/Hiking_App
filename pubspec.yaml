@@ -47,7 +47,10 @@ dependencies:
 
   #firebase
 
+
   firebase_core: ^3.13.0
+  firebase_auth: ^5.5.3
+  google_sign_in: ^6.2.2
   cloud_firestore: ^5.6.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -57,11 +60,16 @@ dependencies:
   connectivity_plus: ^6.0.3
   shared_preferences: ^2.3.2
 
+  flutter_native_splash: ^2.4.1
+
 
 
 
   #Navbar
   persistent_bottom_nav_bar: ^6.2.1
+  flutter_launcher_icons: ^0.14.3
+
+
 
 dev_dependencies:
   flutter_test:
@@ -92,6 +100,7 @@ flutter:
     - assets/
     - assets/Home_Screen_photo/
     - API.env
+    - assets/logo/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -119,3 +128,17 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/logo/app_icon.png"
+
+flutter_native_splash:
+  color: "#2D5A3D"
+  image: assets/Home_Screen_photo/1.jpeg
+  android_12:
+    color: "#2D5A3D"
+    image: assets/Home_Screen_photo/1.jpeg
+  fullscreen: true
