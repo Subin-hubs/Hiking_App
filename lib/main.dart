@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'models/trail_model.dart';
 import 'firebase_options.dart';
 import 'screens/splash_screen.dart';
+import 'utils/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,11 +15,6 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
-  ));
 
   await dotenv.load(fileName: "API.env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -37,16 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'NepalHike',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-        pageTransitionsTheme: const PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: FadeUpwardsPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-          },
-        ),
-      ),
+      theme: AppTheme.theme,
       home: const SplashScreen(),
     );
   }

@@ -32,31 +32,11 @@ class _NavbarState extends State<Navbar> {
   ];
 
   static const List<BottomNavigationBarItem> _navItems = [
-    BottomNavigationBarItem(
-      icon: Icon(Icons.home_outlined),
-      activeIcon: Icon(Icons.home),
-      label: 'Home',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.landscape_outlined),
-      activeIcon: Icon(Icons.landscape),
-      label: 'Trails',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.map_outlined),
-      activeIcon: Icon(Icons.map),
-      label: 'Map',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.backpack_outlined),
-      activeIcon: Icon(Icons.backpack),
-      label: 'Gear',
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.person_outline),
-      activeIcon: Icon(Icons.person),
-      label: 'Profile',
-    ),
+    BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
+    BottomNavigationBarItem(icon: Icon(Icons.landscape_outlined), activeIcon: Icon(Icons.landscape), label: 'Trails'),
+    BottomNavigationBarItem(icon: Icon(Icons.map_outlined), activeIcon: Icon(Icons.map), label: 'Map'),
+    BottomNavigationBarItem(icon: Icon(Icons.backpack_outlined), activeIcon: Icon(Icons.backpack), label: 'Gear'),
+    BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
   ];
 
   @override
@@ -83,11 +63,6 @@ class _NavbarState extends State<Navbar> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
-        selectedItemColor: Colors.green[700],
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        showUnselectedLabels: true,
-        elevation: 8,
         items: _navItems,
       ),
     );

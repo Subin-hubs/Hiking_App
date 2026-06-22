@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:hiking/utils/app_theme.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -74,32 +75,33 @@ class _MapScreenState extends State<MapScreen> {
   List<MapPin> get _filteredPins =>
       _pins.where((p) => _activeFilters.contains(p.type)).toList();
 
+  // ── Pin colours mapped to AppColors ──────────────────────────────────────
   Color _pinColor(PinType type) {
     switch (type) {
-      case PinType.start: return Colors.green[700]!;
-      case PinType.viewpoint: return Colors.blue[700]!;
-      case PinType.campsite: return Colors.orange[700]!;
-      case PinType.temple: return Colors.purple[700]!;
-      case PinType.hospital: return Colors.red[700]!;
+      case PinType.start:    return AppColors.mid;       // forest green
+      case PinType.viewpoint: return AppColors.accent;   // light green
+      case PinType.campsite: return AppColors.warning;   // amber
+      case PinType.temple:   return AppColors.deep;      // dark green
+      case PinType.hospital: return AppColors.error;     // red
     }
   }
 
   IconData _pinIcon(PinType type) {
     switch (type) {
-      case PinType.start: return Icons.flag;
+      case PinType.start:    return Icons.flag;
       case PinType.viewpoint: return Icons.remove_red_eye;
       case PinType.campsite: return Icons.cabin;
-      case PinType.temple: return Icons.temple_buddhist;
+      case PinType.temple:   return Icons.temple_buddhist;
       case PinType.hospital: return Icons.local_hospital;
     }
   }
 
   String _pinLabel(PinType type) {
     switch (type) {
-      case PinType.start: return 'Start';
+      case PinType.start:    return 'Start';
       case PinType.viewpoint: return 'View';
       case PinType.campsite: return 'Camp';
-      case PinType.temple: return 'Temple';
+      case PinType.temple:   return 'Temple';
       case PinType.hospital: return 'Hospital';
     }
   }
@@ -123,27 +125,51 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final size   = MediaQuery.of(context).size;
+    final w      = size.width;
+    final h      = size.height;
+
+    // Responsive breakpoints
+    final isTablet  = w >= 600;
+    final isDesktop = w >= 900;
+
+    final double chipPadH   = isDesktop ? 16 : (isTablet ? 14 : 12);
+    final double chipPadV   = isDesktop ? 10 : (isTablet ? 9  : 8);
+    final double chipFontSz = isDesktop ? 14 : (isTablet ? 13 : 12);
+    final double chipIconSz = isDesktop ? 16 : (isTablet ? 15 : 14);
+
+    final double cardPadding    = isDesktop ? 24 : (isTablet ? 20 : 16);
+    final double cardRadius     = isDesktop ? 24 : (isTablet ? 22 : 20);
+    final double cardNameFontSz = isDesktop ? 18 : (isTablet ? 16 : w * 0.04);
+    final double cardDescFontSz = isDesktop ? 14 : (isTablet ? 13 : w * 0.033);
+    final double cardIconSize   = isDesktop ? 28 : (isTablet ? 25 : 22);
+
+    final double markerSize         = isTablet ? 46 : 38;
+    final double markerSizeSelected = isTablet ? 58 : 48;
+
+    // Card bottom offset so legend doesn't overlap
+    final double cardBottomOffset    = isTablet ? 24 : 20;
+    final double legendBottomNormal  = isTablet ? 24 : 20;
+    final double legendBottomWithCard = isDesktop
+        ? h * 0.22
+        : (isTablet ? h * 0.25 : h * 0.28);
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
-        backgroundColor: Colors.green[700],
-        foregroundColor: Colors.white,
-        title: const Text('Trail Map', style: TextStyle(fontWeight: FontWeight.bold)),
+        // Uses AppBarTheme from AppTheme — deep green bg, white text
+        title: const Text('Trail Map'),
         actions: [
           IconButton(
             icon: const Icon(Icons.my_location),
-            onPressed: () {
-              _mapController.move(LatLng(28.3949, 84.1240), 7);
-            },
+            onPressed: () => _mapController.move(LatLng(28.3949, 84.1240), 7),
           ),
         ],
       ),
       body: Stack(
         children: [
-          // ── Map ──
+
+          // ── Map ────────────────────────────────────────────────────────────
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
@@ -159,10 +185,11 @@ class _MapScreenState extends State<MapScreen> {
               MarkerLayer(
                 markers: _filteredPins.map((pin) {
                   final isSelected = _selectedPin == pin;
+                  final sz = isSelected ? markerSizeSelected : markerSize;
                   return Marker(
                     point: pin.position,
-                    width: isSelected ? 48 : 38,
-                    height: isSelected ? 48 : 38,
+                    width: sz,
+                    height: sz,
                     child: GestureDetector(
                       onTap: () => setState(() => _selectedPin = pin),
                       child: AnimatedContainer(
@@ -170,19 +197,22 @@ class _MapScreenState extends State<MapScreen> {
                         decoration: BoxDecoration(
                           color: _pinColor(pin.type),
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: isSelected ? 3 : 2),
+                          border: Border.all(
+                            color: AppColors.card,
+                            width: isSelected ? 3 : 2,
+                          ),
                           boxShadow: [
                             BoxShadow(
                               color: _pinColor(pin.type).withOpacity(0.4),
-                              blurRadius: isSelected ? 12 : 6,
+                              blurRadius: isSelected ? 14 : 6,
                               spreadRadius: isSelected ? 2 : 0,
                             ),
                           ],
                         ),
                         child: Icon(
                           _pinIcon(pin.type),
-                          color: Colors.white,
-                          size: isSelected ? 24 : 18,
+                          color: AppColors.card,
+                          size: isSelected ? (isTablet ? 28 : 24) : (isTablet ? 22 : 18),
                         ),
                       ),
                     ),
@@ -192,7 +222,7 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
 
-          // ── Filter Chips ──
+          // ── Filter Chips ───────────────────────────────────────────────────
           Positioned(
             top: 12,
             left: 12,
@@ -215,24 +245,36 @@ class _MapScreenState extends State<MapScreen> {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       margin: const EdgeInsets.only(right: 8),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: EdgeInsets.symmetric(horizontal: chipPadH, vertical: chipPadV),
                       decoration: BoxDecoration(
-                        color: active ? _pinColor(type) : Colors.white,
+                        color: active ? _pinColor(type) : AppColors.card,
                         borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: active ? _pinColor(type) : AppColors.border,
+                          width: 1,
+                        ),
                         boxShadow: [
-                          BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 6, offset: const Offset(0, 2)),
+                          BoxShadow(
+                            color: AppColors.deep.withOpacity(0.10),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
                         ],
                       ),
                       child: Row(
                         children: [
-                          Icon(_pinIcon(type), color: active ? Colors.white : _pinColor(type), size: 14),
+                          Icon(
+                            _pinIcon(type),
+                            color: active ? AppColors.card : _pinColor(type),
+                            size: chipIconSz,
+                          ),
                           const SizedBox(width: 5),
                           Text(
                             _pinLabel(type),
                             style: TextStyle(
-                              color: active ? Colors.white : Colors.grey[700],
+                              color: active ? AppColors.card : AppColors.text2,
                               fontWeight: FontWeight.w600,
-                              fontSize: 12,
+                              fontSize: chipFontSz,
                             ),
                           ),
                         ],
@@ -244,22 +286,27 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
 
-          // ── Info Card ──
+          // ── Info Card ──────────────────────────────────────────────────────
           if (_selectedPin != null)
             Positioned(
-              bottom: 20,
-              left: 16,
-              right: 16,
+              bottom: cardBottomOffset,
+              left: isDesktop ? w * 0.25 : 16,
+              right: isDesktop ? w * 0.25 : 16,
               child: AnimatedSlide(
-                offset: _selectedPin != null ? Offset.zero : const Offset(0, 1),
+                offset: Offset.zero,
                 duration: const Duration(milliseconds: 300),
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: EdgeInsets.all(cardPadding),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
+                    color: AppColors.card,
+                    borderRadius: BorderRadius.circular(cardRadius),
+                    border: Border.all(color: AppColors.border),
                     boxShadow: [
-                      BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 20, offset: const Offset(0, 5)),
+                      BoxShadow(
+                        color: AppColors.deep.withOpacity(0.15),
+                        blurRadius: 20,
+                        offset: const Offset(0, 5),
+                      ),
                     ],
                   ),
                   child: Column(
@@ -269,12 +316,16 @@ class _MapScreenState extends State<MapScreen> {
                       Row(
                         children: [
                           Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: EdgeInsets.all(isTablet ? 10 : 8),
                             decoration: BoxDecoration(
-                              color: _pinColor(_selectedPin!.type).withOpacity(0.1),
+                              color: _pinColor(_selectedPin!.type).withOpacity(0.12),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Icon(_pinIcon(_selectedPin!.type), color: _pinColor(_selectedPin!.type), size: 22),
+                            child: Icon(
+                              _pinIcon(_selectedPin!.type),
+                              color: _pinColor(_selectedPin!.type),
+                              size: cardIconSize,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -283,19 +334,27 @@ class _MapScreenState extends State<MapScreen> {
                               children: [
                                 Text(
                                   _selectedPin!.name,
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: screenWidth * 0.04),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: cardNameFontSz,
+                                    color: AppColors.text1,
+                                  ),
                                 ),
+                                const SizedBox(height: 2),
                                 Row(
                                   children: [
-                                    Icon(Icons.location_on, size: 12, color: Colors.grey[500]),
+                                    Icon(Icons.location_on, size: 12, color: AppColors.text2),
                                     const SizedBox(width: 2),
                                     Text(
                                       _selectedPin!.region,
-                                      style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                                      style: TextStyle(color: AppColors.text2, fontSize: 12),
                                     ),
                                     if (_selectedPin!.elevation != null) ...[
                                       const SizedBox(width: 8),
-                                      Text('⛰ ${_selectedPin!.elevation}', style: TextStyle(color: Colors.grey[500], fontSize: 12)),
+                                      Text(
+                                        '⛰ ${_selectedPin!.elevation}',
+                                        style: TextStyle(color: AppColors.text2, fontSize: 12),
+                                      ),
                                     ],
                                   ],
                                 ),
@@ -304,54 +363,75 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                           GestureDetector(
                             onTap: () => setState(() => _selectedPin = null),
-                            child: Icon(Icons.close, color: Colors.grey[400], size: 20),
+                            child: Icon(Icons.close, color: AppColors.text2, size: 20),
                           ),
                         ],
                       ),
                       const SizedBox(height: 10),
                       Text(
                         _selectedPin!.description,
-                        style: TextStyle(color: Colors.grey[600], fontSize: screenWidth * 0.033, height: 1.4),
+                        style: TextStyle(
+                          color: AppColors.text2,
+                          fontSize: cardDescFontSz,
+                          height: 1.4,
+                        ),
                       ),
                       const SizedBox(height: 14),
                       Row(
                         children: [
+                          // Directions button
                           Expanded(
                             child: GestureDetector(
                               onTap: () => _openInMaps(_selectedPin!.position, _selectedPin!.name),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                padding: EdgeInsets.symmetric(vertical: isTablet ? 12 : 10),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[100],
+                                  color: AppColors.surface,
                                   borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: AppColors.border),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.directions, color: Colors.grey[700], size: 16),
+                                    Icon(Icons.directions, color: AppColors.mid, size: 16),
                                     const SizedBox(width: 6),
-                                    Text('Directions', style: TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w600, fontSize: 13)),
+                                    Text(
+                                      'Directions',
+                                      style: TextStyle(
+                                        color: AppColors.mid,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: isTablet ? 14 : 13,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 10),
+                          // View More button
                           Expanded(
                             child: GestureDetector(
                               onTap: () => _openWebSearch(_selectedPin!.name),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                padding: EdgeInsets.symmetric(vertical: isTablet ? 12 : 10),
                                 decoration: BoxDecoration(
-                                  color: Colors.green[700],
+                                  color: AppColors.mid,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: const Row(
+                                child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.open_in_browser, color: Colors.white, size: 16),
-                                    SizedBox(width: 6),
-                                    Text('View More', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13)),
+                                    Icon(Icons.open_in_browser, color: AppColors.card, size: 16),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'View More',
+                                      style: TextStyle(
+                                        color: AppColors.card,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: isTablet ? 14 : 13,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -365,17 +445,22 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
 
-          // ── Legend ──
+          // ── Legend ─────────────────────────────────────────────────────────
           Positioned(
-            bottom: _selectedPin != null ? screenHeight * 0.28 : 20,
+            bottom: _selectedPin != null ? legendBottomWithCard : legendBottomNormal,
             right: 16,
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.all(isTablet ? 12 : 10),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.border),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 2)),
+                  BoxShadow(
+                    color: AppColors.deep.withOpacity(0.10),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
                 ],
               ),
               child: Column(
@@ -386,18 +471,29 @@ class _MapScreenState extends State<MapScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(color: _pinColor(type), shape: BoxShape.circle),
+                        width: isTablet ? 12 : 10,
+                        height: isTablet ? 12 : 10,
+                        decoration: BoxDecoration(
+                          color: _pinColor(type),
+                          shape: BoxShape.circle,
+                        ),
                       ),
                       const SizedBox(width: 6),
-                      Text(_pinLabel(type), style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+                      Text(
+                        _pinLabel(type),
+                        style: TextStyle(
+                          fontSize: isTablet ? 13 : 11,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.text1,
+                        ),
+                      ),
                     ],
                   ),
                 )).toList(),
               ),
             ),
           ),
+
         ],
       ),
     );
